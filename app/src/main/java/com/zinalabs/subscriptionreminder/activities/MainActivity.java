@@ -9,10 +9,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.zinalabs.subscriptionreminder.R;
 import com.zinalabs.subscriptionreminder.adapter.CustomerAdapter;
 import com.zinalabs.subscriptionreminder.interfaces.MainActivityView;
+import com.zinalabs.subscriptionreminder.model.Customer;
 import com.zinalabs.subscriptionreminder.presenters.MainActivityPresenter;
 
 import org.json.JSONArray;
@@ -53,6 +55,16 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
 
         jsonArray.put(customerOne);
         jsonArray.put(customerTwo);
+
+
+        Customer customer= new Customer();
+        customer.add(1,"Yusuf","lower",1);
+        customer.add(2,"Abdifatah","upper",0);
+
+        Toast.makeText(context, customer.getCustomers().toString(), Toast.LENGTH_LONG).show();
+
+
+
 
         RecyclerView recyclerView= (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
