@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.zinalabs.subscriptionreminder.R;
 import com.zinalabs.subscriptionreminder.interfaces.CustomerProfileView;
+import com.zinalabs.subscriptionreminder.model.Customer;
 import com.zinalabs.subscriptionreminder.presenters.CustomerProfilePresenter;
 
 import org.json.JSONArray;
@@ -24,13 +25,12 @@ public class CustomerProfileActivity extends AppCompatActivity implements Custom
     TextView customerNameDis;
     TextView locationDis;
     TextView statusDis;
-    JSONArray customers;
-    JSONObject customer;
     int id;
     String name;
     String location;
     int status;
     CustomerProfilePresenter presenter;
+    Customer customer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,16 +45,12 @@ public class CustomerProfileActivity extends AppCompatActivity implements Custom
         presenter= new CustomerProfilePresenter(this);
         Intent activityIntent=this.getIntent();
         Bundle extras=activityIntent.getExtras();
-        int position=extras.getInt("position");
+        customer= (Customer) extras.get("customer");
 
-        try {
-
-            customers= MainActivity.jsonArray;
-            customer=customers.getJSONObject(position);
-            id= customer.getInt("id");
-            name= customer.getString("name");
-            location= customer.getString("location");
-            status= customer.getInt("status");
+            id= customer.getId();
+            name= customer.getName();
+            location= customer.getAddress();
+            status= customer.getStatus();
 
             customerNameDis.setText(name);
             locationDis.setText(location);
@@ -65,9 +61,6 @@ public class CustomerProfileActivity extends AppCompatActivity implements Custom
                 statusDis.setText("Disconnected");
             }
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -107,15 +100,15 @@ public class CustomerProfileActivity extends AppCompatActivity implements Custom
     public void clickOnMenuItem(MenuItem item) {
         switch(item.getItemId()){
             case R.id.addPayment:
-                presenter.changeActivity(MakePaymentActivity.class, id);
+                presenter.changeActivity(MakePaymentActivity.class, customer);
                 break;
         }
     }
 
     @Override
-    public void changeActivty(Class activity, int customer_id) {
+    public void changeActivty(Class activity, Customer customer) {
         Intent changeActivty= new Intent(this ,activity);
-        changeActivty.putExtra("id", customer_id);
+        changeActivty.putExtra("customer", customer);
         startActivity(changeActivty);
     }
 }

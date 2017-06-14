@@ -2,6 +2,8 @@ package com.zinalabs.subscriptionreminder.interfaces;
 
 import android.view.MenuItem;
 
+import com.zinalabs.subscriptionreminder.model.Customer;
+
 /**
  * Created by Beraki on 6/4/2017.
  */
@@ -9,5 +11,5 @@ import android.view.MenuItem;
 public interface CustomerProfileView {
     void clickOnMenuItem(MenuItem item);
 
-    void changeActivty(Class activity, int customer_id);
+    void changeActivty(Class activity, Customer customer);
 }

@@ -21,8 +21,8 @@ public class MakePaymentPresenter {
     public void submitPayment(int customer_id, Date upto){
         view.submitPayment(customer_id, upto);
     }
-    public void selectFromDate(EditText EDview){
-        view.selectFromDate(EDview);
+    public void selectFromDate(EditText EDview, EditText toDate){
+        view.selectFromDate(EDview, toDate);
     }
 
     public void setEditText(EditText eDview, String text) {

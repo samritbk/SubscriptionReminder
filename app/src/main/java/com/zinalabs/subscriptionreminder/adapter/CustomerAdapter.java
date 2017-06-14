@@ -14,10 +14,13 @@ import android.widget.Toast;
 import com.zinalabs.subscriptionreminder.activities.MainActivity;
 import com.zinalabs.subscriptionreminder.R;
 import com.zinalabs.subscriptionreminder.activities.CustomerProfileActivity;
+import com.zinalabs.subscriptionreminder.model.Customer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * Created by Beraki on 12/17/2016.
@@ -25,11 +28,11 @@ import org.json.JSONObject;
 
 public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHolderAdapter> {
 
-    //ArrayList<String[]> data= new ArrayList<>();
-    JSONArray data=new JSONArray();
+
+    ArrayList<Customer> data=new ArrayList<Customer>();
     LayoutInflater inflater;
     Context context;
-    //String server = "http://192.168.0.102/church/";
+
     public static String server = "http://eriotc.org/";
 
     public CustomerAdapter(Context context){
@@ -47,44 +50,41 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolderAdapter holder, final int position) {
 
-        try {
-            JSONObject customer=data.getJSONObject(position);
+        final Customer customer= data.get(position);
 
-            Toast.makeText(context, data.toString(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, data.toString(), Toast.LENGTH_SHORT).show();
 
-            String name=customer.getString("name");
-            String location=customer.getString("location");
-            int status=customer.getInt("status");
+        String name=customer.getName();
+        String location=customer.getAddress();
+        int status=customer.getStatus();
 
-            holder.customerName.setText(name);
-            holder.customerLocation.setText(location);
+        holder.customerName.setText(name);
+        holder.customerLocation.setText(location);
 
-            if(status != 0) {
-                holder.customerStatus.setBackground(new ColorDrawable(context.getResources().getColor(android.R.color.holo_green_dark)));
-            }else{
-                holder.customerStatus.setBackground(new ColorDrawable(context.getResources().getColor(android.R.color.holo_red_dark)));
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if(status != 0) {
+            holder.customerStatus.setBackground(new ColorDrawable(context.getResources().getColor(android.R.color.holo_green_dark)));
+        }else{
+            holder.customerStatus.setBackground(new ColorDrawable(context.getResources().getColor(android.R.color.holo_red_dark)));
         }
+
         holder.parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //MainActivity main=new MainActivity();
-                MainActivity.presenter.changeActivity(CustomerProfileActivity.class,position);
+                MainActivity.presenter.changeActivity(CustomerProfileActivity.class,customer);
                 Toast.makeText(context, position+"", Toast.LENGTH_LONG).show();
             }
         });
     }
 
-    public void addList(JSONArray list){
-        this.data = list;
+    public void addList(ArrayList<Customer> customersList){
+        this.data = customersList;
         notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        return data.length();
+        return data.size();
     }
 
     /**

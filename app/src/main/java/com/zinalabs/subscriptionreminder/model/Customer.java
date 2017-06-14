@@ -1,12 +1,13 @@
 package com.zinalabs.subscriptionreminder.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Beraki on 6/11/2017.
  */
 
-public class Customer {
+public class Customer implements Serializable {
 
 
     int id, status;
@@ -24,15 +25,6 @@ public class Customer {
         this.name = name;
         this.address = address;
         this.status = status;
-    }
-
-    public void add(int id, String name, String address, int status){
-        Customer customer=new Customer(id, name, address, status);
-        this.customers.add(customer);
-    }
-
-    public ArrayList<Customer> getCustomers(){
-        return customers;
     }
 
     public void setId(int id) {

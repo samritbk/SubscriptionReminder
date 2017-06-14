@@ -12,10 +12,9 @@ import android.widget.Toast;
 
 import com.zinalabs.subscriptionreminder.R;
 import com.zinalabs.subscriptionreminder.interfaces.MakePaymentView;
+import com.zinalabs.subscriptionreminder.model.Customer;
 import com.zinalabs.subscriptionreminder.presenters.MakePaymentPresenter;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -28,6 +27,8 @@ public class MakePaymentActivity extends AppCompatActivity implements MakePaymen
     Button payButton;
     DatePickerDialog datePickerDialog;
     MakePaymentPresenter presenter;
+    Bundle intentExtras;
+    Customer customer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,18 +36,23 @@ public class MakePaymentActivity extends AppCompatActivity implements MakePaymen
         setContentView(R.layout.activity_make_payment);
         initialization();
 
-        setSupportActionBar(toolbar);
-        showUpButton();
+
+        intentExtras=getIntent().getExtras();
+        customer=(Customer) intentExtras.get("customer");
+
+
+        Toast.makeText(this, customer.toString(), Toast.LENGTH_SHORT).show();
+
         fromDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.selectFromDate(fromDate);
+                presenter.selectFromDate(fromDate, toDate);
             }
         });
         toDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.selectFromDate(toDate);
+                presenter.selectFromDate(toDate, toDate);
             }
         });
 
@@ -75,6 +81,10 @@ public class MakePaymentActivity extends AppCompatActivity implements MakePaymen
         fromDate = (EditText) findViewById(R.id.fromDate);
         toDate = (EditText) findViewById(R.id.toDate);
         payButton = (Button) findViewById(R.id.payButton);
+
+        setSupportActionBar(toolbar);
+        showUpButton();
+
     }
 
     @Override
@@ -83,7 +93,7 @@ public class MakePaymentActivity extends AppCompatActivity implements MakePaymen
     }
 
     @Override
-    public void selectFromDate(final EditText EDview) {
+    public void selectFromDate(final EditText EDview, final EditText EDtoView) {
         final Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);
         int month = c.get(Calendar.MONTH);
@@ -94,7 +104,10 @@ public class MakePaymentActivity extends AppCompatActivity implements MakePaymen
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month=month+1;
+                int monthTo=month+1;
                 presenter.setEditText(EDview, year+"-"+month+"-"+day);
+                presenter.setEditText(EDtoView, year+"-"+monthTo+"-"+day);
+
             }
         }, year, month, day);
         datePickerDialog.show();

@@ -21,11 +21,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity implements MainActivityView {
 
     Context context;
     public static JSONArray jsonArray;
     public static MainActivityPresenter presenter;
+    ArrayList<Customer> customersList=new ArrayList<Customer>();
 
 
     @Override
@@ -57,13 +60,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
         jsonArray.put(customerTwo);
 
 
-        Customer customer= new Customer();
-        customer.add(1,"Yusuf","lower",1);
-        customer.add(2,"Abdifatah","upper",0);
+        Customer customer= new Customer(1,"Yusuf","lower",1);
+        Customer customers= new Customer(2,"Abdifatah","upper",0);
 
-        Toast.makeText(context, customer.getCustomers().toString(), Toast.LENGTH_LONG).show();
-
-
+        customersList.add(customer);
+        customersList.add(customers);
 
 
         RecyclerView recyclerView= (RecyclerView) findViewById(R.id.recyclerView);
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
 
-        customerAdapter.addList(jsonArray);
+        customerAdapter.addList(customersList);
     }
 
     @Override
@@ -96,17 +97,17 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
     public void clickOnMenuItem(MenuItem item) {
         switch(item.getItemId()){
             case R.id.addCustomer:
-                presenter.changeActivity(AddCustomerActivity.class, -1);
+                presenter.changeActivity(AddCustomerActivity.class, null);
                 break;
         }
     }
 
     @Override
-    public void changeActivity(Class activityClass, int position) {
+    public void changeActivity(Class activityClass, Customer customer) {
         Intent paymentActivity= new Intent(context, activityClass);
 
-        if(position != -1) {
-            paymentActivity.putExtra("position", position);
+        if(customer != null) {
+            paymentActivity.putExtra("customer", customer);
         }
 
         context.startActivity(paymentActivity);

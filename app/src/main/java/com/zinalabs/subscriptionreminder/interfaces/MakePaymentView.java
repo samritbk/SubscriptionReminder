@@ -10,7 +10,7 @@ import java.util.Date;
 
 public interface MakePaymentView {
     void submitPayment(int customer_id, Date upto);
-    void selectFromDate(EditText EDview);
+    void selectFromDate(EditText EDview, EditText EDtoView);
     void setEditText(EditText eDview, String text);
     void payButtonClicked();
 }
