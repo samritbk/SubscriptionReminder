@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zinalabs.subscriptionreminder.R;
@@ -25,6 +26,7 @@ public class MakePaymentActivity extends AppCompatActivity implements MakePaymen
     EditText fromDate;
     EditText toDate;
     Button payButton;
+    TextView customerName;
     DatePickerDialog datePickerDialog;
     MakePaymentPresenter presenter;
     Bundle intentExtras;
@@ -40,7 +42,7 @@ public class MakePaymentActivity extends AppCompatActivity implements MakePaymen
         intentExtras=getIntent().getExtras();
         customer=(Customer) intentExtras.get("customer");
 
-
+        presenter.setTextViewText(customerName, customer.getName());
         Toast.makeText(this, customer.toString(), Toast.LENGTH_SHORT).show();
 
         fromDate.setOnClickListener(new View.OnClickListener() {
@@ -78,13 +80,13 @@ public class MakePaymentActivity extends AppCompatActivity implements MakePaymen
     private void initialization() {
         presenter=new MakePaymentPresenter(this);
         toolbar= (Toolbar) findViewById(R.id.toolbar);
+        customerName = (TextView) findViewById(R.id.customerName);
         fromDate = (EditText) findViewById(R.id.fromDate);
         toDate = (EditText) findViewById(R.id.toDate);
         payButton = (Button) findViewById(R.id.payButton);
 
         setSupportActionBar(toolbar);
         showUpButton();
-
     }
 
     @Override
@@ -107,7 +109,6 @@ public class MakePaymentActivity extends AppCompatActivity implements MakePaymen
                 int monthTo=month+1;
                 presenter.setEditText(EDview, year+"-"+month+"-"+day);
                 presenter.setEditText(EDtoView, year+"-"+monthTo+"-"+day);
-
             }
         }, year, month, day);
         datePickerDialog.show();
@@ -116,6 +117,11 @@ public class MakePaymentActivity extends AppCompatActivity implements MakePaymen
     @Override
     public void setEditText(EditText eDview, String text) {
         eDview.setText(text);
+    }
+
+    @Override
+    public void setTextViewText(TextView textView, String text) {
+        textView.setText(text);
     }
 
     @Override

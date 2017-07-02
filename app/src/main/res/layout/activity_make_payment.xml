@@ -55,14 +55,6 @@
                         android:hint="Select expiry date"
                         android:focusable="false"
                         android:editable="false"/>
-                    <TextView
-                        android:id="@+id/amountLabel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Amount Paid"
-                        android:textSize="18sp"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginLeft="5dp" />
 
                     <EditText
                         android:id="@+id/amount"
@@ -70,6 +62,14 @@
                         android:layout_height="wrap_content"
                         android:inputType="number"
                         android:hint="Input amount"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#CCC"
+                        android:text="Subscription for Abdifatah for 1 month. An amount of 20,000 UGX paid."
+                        android:layout_marginStart="5dp"
+                        android:layout_marginLeft="5dp" />
 
                     <Button
                         android:id="@+id/payButton"

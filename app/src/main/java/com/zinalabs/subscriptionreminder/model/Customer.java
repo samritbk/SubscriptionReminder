@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class Customer implements Serializable {
 
 
-    int id, status;
+    int id, status, telephone;
     String name, address;
 
     ArrayList<Customer> customers=null;
@@ -20,11 +20,12 @@ public class Customer implements Serializable {
 
     }
 
-    public Customer(int id, String name, String address, int status){
+    public Customer(int id, String name, String address, int telephone, int status){
         this.id = id;
         this.name = name;
         this.address = address;
         this.status = status;
+        this.telephone = telephone;
     }
 
     public void setId(int id) {
@@ -57,5 +58,13 @@ public class Customer implements Serializable {
 
     public int getStatus() {
         return status;
+    }
+
+    public void setTelephone(int telephone) {
+        this.telephone = telephone;
+    }
+
+    public int getTelephone() {
+        return telephone;
     }
 }

@@ -11,6 +11,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 import com.zinalabs.subscriptionreminder.R;
 import com.zinalabs.subscriptionreminder.adapter.CustomerAdapter;
 import com.zinalabs.subscriptionreminder.interfaces.MainActivityView;
@@ -28,8 +33,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
     Context context;
     public static JSONArray jsonArray;
     public static MainActivityPresenter presenter;
-    ArrayList<Customer> customersList=new ArrayList<Customer>();
+    CustomerAdapter customerAdapter;
+    ArrayList<Customer> customersList=new ArrayList<>();
 
+    String url="http://192.168.0.100/projectabdi/index.php?mode=getCustomers";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
 
         jsonArray=new JSONArray();
         JSONObject customerOne=new JSONObject();
-        JSONObject customerTwo=new JSONObject();
+        final JSONObject customerTwo=new JSONObject();
 
         try {
             customerOne.put("id",1);
@@ -60,22 +67,38 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
         jsonArray.put(customerTwo);
 
 
-        Customer customer= new Customer(1,"Yusuf","lower",1);
-        Customer customers= new Customer(2,"Abdifatah","upper",0);
-
-        customersList.add(customer);
-        customersList.add(customers);
-
-
         RecyclerView recyclerView= (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        CustomerAdapter customerAdapter = new CustomerAdapter(this);
+        customerAdapter = new CustomerAdapter(this);
         recyclerView.setAdapter(customerAdapter);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
 
-        customerAdapter.addList(customersList);
+        RequestQueue requestQueue;
+        requestQueue = Volley.newRequestQueue(this);
+
+        JsonArrayRequest jsonArrayRequest= new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+
+            presenter.onVolleyResponse(response, customersList, customerAdapter);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        requestQueue.add(jsonArrayRequest);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
     }
 
     @Override
@@ -97,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
     public void clickOnMenuItem(MenuItem item) {
         switch(item.getItemId()){
             case R.id.addCustomer:
-                presenter.changeActivity(AddCustomerActivity.class, null);
+                changeActivity(AddCustomerActivity.class, null);
                 break;
         }
     }
@@ -111,5 +134,31 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
         }
 
         context.startActivity(paymentActivity);
+    }
+
+    @Override
+    public void onVolleyReponse(JSONArray response, ArrayList<Customer> customersList, CustomerAdapter customerAdapter) {
+        if(response.length() != 0) {
+            for (int i=0; i < response.length(); i++) {
+                try {
+
+
+                    JSONObject customer= response.getJSONObject(i);
+
+                    int customer_id=customer.getInt("customer_id");
+                    String name= customer.getString("name");
+                    String address= customer.getString("address");
+                    int telephone= customer.getInt("telephone");
+                    int status=customer.getInt("status");
+                    Toast.makeText(MainActivity.this, name, Toast.LENGTH_SHORT).show();
+                    Customer customerObj=new Customer(customer_id, name, address, telephone, status);
+                    customersList.add(customerObj);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        customerAdapter.addList(customersList);
     }
 }

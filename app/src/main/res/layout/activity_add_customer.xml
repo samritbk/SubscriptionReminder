@@ -31,6 +31,7 @@
         android:layout_height="wrap_content"
         android:text="Location"/>
         <Spinner
+            android:id="@+id/locationSpinner"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:entries="@array/spinnerLocation"/>
@@ -39,6 +40,7 @@
         android:layout_height="wrap_content"
         android:text="Box.No"/>
         <EditText
+            android:id="@+id/addressBoxET"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number"/>
@@ -47,6 +49,7 @@
         android:layout_height="wrap_content"
         android:text="Tel"/>
         <EditText
+            android:id="@+id/telET"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="phone"/>
@@ -55,8 +58,15 @@
         android:layout_height="wrap_content"
         android:text="Comment"/>
         <EditText
+            android:id="@+id/commentET"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:lines="4"/>
+
+        <Button
+            android:id="@+id/addCustomerButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Customer"/>
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

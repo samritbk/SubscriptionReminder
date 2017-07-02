@@ -1,6 +1,7 @@
 package com.zinalabs.subscriptionreminder.presenters;
 
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.zinalabs.subscriptionreminder.interfaces.MainActivityView;
 import com.zinalabs.subscriptionreminder.interfaces.MakePaymentView;
@@ -29,7 +30,12 @@ public class MakePaymentPresenter {
         view.setEditText(eDview, text);
     }
 
+    public void setTextViewText(TextView textView, String text){
+        view.setTextViewText(textView, text);
+    }
+
     public void payButtonClicked() {
         view.payButtonClicked();
     }
+
 }

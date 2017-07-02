@@ -3,8 +3,13 @@ package com.zinalabs.subscriptionreminder.presenters;
 import android.support.annotation.Nullable;
 import android.view.MenuItem;
 
+import com.zinalabs.subscriptionreminder.adapter.CustomerAdapter;
 import com.zinalabs.subscriptionreminder.interfaces.MainActivityView;
 import com.zinalabs.subscriptionreminder.model.Customer;
+
+import org.json.JSONArray;
+
+import java.util.ArrayList;
 
 /**
  * Created by Beraki on 5/24/2017.
@@ -26,4 +31,7 @@ public class MainActivityPresenter {
         view.changeActivity(activityClass, customer);
     }
 
+    public static void onVolleyResponse(JSONArray response, ArrayList<Customer> customersList, CustomerAdapter customerAdapter){
+        view.onVolleyReponse(response, customersList, customerAdapter);
+    }
 }
