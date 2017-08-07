@@ -1,5 +1,6 @@
 package com.zinalabs.subscriptionreminder.interfaces;
 
+import android.content.Context;
 import android.view.MenuItem;
 
 import com.zinalabs.subscriptionreminder.model.Customer;
@@ -12,4 +13,6 @@ public interface CustomerProfileView {
     void clickOnMenuItem(MenuItem item);
 
     void changeActivty(Class activity, Customer customer);
+
+    void callButtonClicked(Context context, int number);
 }

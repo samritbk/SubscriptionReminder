@@ -1,5 +1,6 @@
 package com.zinalabs.subscriptionreminder.activities;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -8,15 +9,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.zinalabs.subscriptionreminder.R;
 import com.zinalabs.subscriptionreminder.interfaces.AddCustomerView;
 import com.zinalabs.subscriptionreminder.presenters.AddCustomerPresenter;
-import com.zinalabs.subscriptionreminder.presenters.MakePaymentPresenter;
 
 import java.util.ArrayList;
 
@@ -29,6 +33,7 @@ public class AddCustomerActivity extends AppCompatActivity implements AddCustome
     EditText tel;
     EditText comment;
     AddCustomerPresenter presenter;
+    String mainUrl= "http://192.168.0.100/projectabdi/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +66,7 @@ public class AddCustomerActivity extends AppCompatActivity implements AddCustome
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch(item.getItemId()){
-            case R.id.done:
+            case R.id.actionAddCustomer:
                 presenter.addCustomerButtonClicked();
                 break;
         }
@@ -82,7 +87,8 @@ public class AddCustomerActivity extends AppCompatActivity implements AddCustome
     @Override
     public void addCustomerButtonClicked() {
 
-        ArrayList<String> list=new ArrayList<>();
+        ArrayList<String> list=new ArrayList<String>();
+        final ProgressDialog progressDialog;
 
         String name= customerName.getText().toString();
         String address= locationSpinner.getSelectedItem().toString();
@@ -91,18 +97,49 @@ public class AddCustomerActivity extends AppCompatActivity implements AddCustome
 
         if(name.length() < 3){
             list.add("- Name is too short\n");
-            if(boxNo.length() == 0){
-                list.add("- Add Box No\n");
-                if(telephone.length() != 10){
-                    list.add("- Telephone is invalid\n");
-                }
-            }
+        }
+        if(boxNo.length() < 1){
+            list.add("- Add Box No\n");
+        }
+        if(telephone.length() != 10){
+            list.add("- Telephone is invalid\n");
         }
 
-        if(!list.isEmpty()){
+        if(list.size() != 0){
+
             AlertDialog.Builder alert= new AlertDialog.Builder(this);
-            alert.setMessage(name+address+boxNo+telephone);
+            StringBuilder message = new StringBuilder();
+            for(int i=0; i < list.size(); i++){
+                message.append(list.get(i));
+                alert.setMessage(message);
+            }
+            alert.setPositiveButton("Okay", null);
             alert.show();
+
+        }else{
+            progressDialog= new ProgressDialog(this);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setMessage("Adding customer...");
+            //progressDialog.setCancelable(false);
+            progressDialog.show();
+
+            String url= mainUrl+"index.php?mode=addCustomer&name="+name+"&address="+address+"-"+boxNo+"&tel="+telephone;
+            Toast.makeText(this, url, Toast.LENGTH_LONG).show();
+            StringRequest stringRequest= new StringRequest(url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    progressDialog.hide();
+                    finish();
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(AddCustomerActivity.this, error.toString(), Toast.LENGTH_LONG).show();
+                }
+            });
+
+            RequestQueue requestQueue=Volley.newRequestQueue(this);
+            requestQueue.add(stringRequest);
         }
 
     }
@@ -114,7 +151,7 @@ public class AddCustomerActivity extends AppCompatActivity implements AddCustome
         switch(viewId){
             case R.id.addCustomerButton:
                 // CODE HERE
-
+                presenter.addCustomerButtonClicked();
                 break;
         }
     }

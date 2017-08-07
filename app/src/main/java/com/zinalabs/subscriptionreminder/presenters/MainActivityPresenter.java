@@ -1,7 +1,9 @@
 package com.zinalabs.subscriptionreminder.presenters;
 
+import android.content.Context;
 import android.support.annotation.Nullable;
 import android.view.MenuItem;
+import android.widget.ProgressBar;
 
 import com.zinalabs.subscriptionreminder.adapter.CustomerAdapter;
 import com.zinalabs.subscriptionreminder.interfaces.MainActivityView;
@@ -27,6 +29,14 @@ public class MainActivityPresenter {
         view.clickOnMenuItem(item);
     }
 
+    public void showProgressBar(ProgressBar progressBar) {
+        view.showProgressBar(progressBar);
+    }
+
+    public void hideProgressBar(ProgressBar progressBar) {
+        view.showProgressBar(progressBar);
+    }
+
     public static void changeActivity(Class activityClass, @Nullable Customer customer) {
         view.changeActivity(activityClass, customer);
     }
@@ -34,4 +44,5 @@ public class MainActivityPresenter {
     public static void onVolleyResponse(JSONArray response, ArrayList<Customer> customersList, CustomerAdapter customerAdapter){
         view.onVolleyReponse(response, customersList, customerAdapter);
     }
+
 }

@@ -52,7 +52,6 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHo
 
         final Customer customer= data.get(position);
 
-        Toast.makeText(context, data.toString(), Toast.LENGTH_SHORT).show();
 
         String name=customer.getName();
         String location=customer.getAddress();
@@ -72,7 +71,6 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHo
             public void onClick(View view) {
                 //MainActivity main=new MainActivity();
                 MainActivity.presenter.changeActivity(CustomerProfileActivity.class,customer);
-                Toast.makeText(context, position+"", Toast.LENGTH_LONG).show();
             }
         });
     }

@@ -9,6 +9,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -38,6 +40,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
 
     String url="http://192.168.0.100/projectabdi/index.php?mode=getCustomers";
 
+    JsonArrayRequest jsonArrayRequest;
+    RequestQueue requestQueue;
+    RecyclerView recyclerView;
+    ProgressBar progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,40 +52,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
         context=this;
         presenter = new MainActivityPresenter(this);
 
-        jsonArray=new JSONArray();
-        JSONObject customerOne=new JSONObject();
-        final JSONObject customerTwo=new JSONObject();
-
-        try {
-            customerOne.put("id",1);
-            customerOne.put("name","Yusuf");
-            customerOne.put("location","lower");
-            customerOne.put("status",1);
-
-            customerOne.put("id",2);
-            customerTwo.put("name","Abdifatah");
-            customerTwo.put("location","upper");
-            customerTwo.put("status",0);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        jsonArray.put(customerOne);
-        jsonArray.put(customerTwo);
-
-
-        RecyclerView recyclerView= (RecyclerView) findViewById(R.id.recyclerView);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        customerAdapter = new CustomerAdapter(this);
-        recyclerView.setAdapter(customerAdapter);
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(llm);
-
-        RequestQueue requestQueue;
-        requestQueue = Volley.newRequestQueue(this);
-
-        JsonArrayRequest jsonArrayRequest= new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
+        initialization();
+        
+        jsonArrayRequest= new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
 
@@ -91,14 +67,25 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
 
             }
         });
-        requestQueue.add(jsonArrayRequest);
 
+        requestQueue.add(jsonArrayRequest);
+    }
+
+    public void initialization(){
+        progressBar= (ProgressBar) findViewById(R.id.progressBar);
+        recyclerView= (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        customerAdapter = new CustomerAdapter(this);
+        recyclerView.setAdapter(customerAdapter);
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(llm);
+        requestQueue = Volley.newRequestQueue(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
     }
 
     @Override
@@ -126,6 +113,16 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
     }
 
     @Override
+    public void showProgressBar(ProgressBar progressBar) {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgressBar(ProgressBar progressBar) {
+        progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
     public void changeActivity(Class activityClass, Customer customer) {
         Intent paymentActivity= new Intent(context, activityClass);
 
@@ -142,7 +139,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
             for (int i=0; i < response.length(); i++) {
                 try {
 
-
                     JSONObject customer= response.getJSONObject(i);
 
                     int customer_id=customer.getInt("customer_id");
@@ -150,7 +146,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
                     String address= customer.getString("address");
                     int telephone= customer.getInt("telephone");
                     int status=customer.getInt("status");
-                    Toast.makeText(MainActivity.this, name, Toast.LENGTH_SHORT).show();
                     Customer customerObj=new Customer(customer_id, name, address, telephone, status);
                     customersList.add(customerObj);
 

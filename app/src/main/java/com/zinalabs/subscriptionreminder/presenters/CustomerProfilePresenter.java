@@ -1,5 +1,6 @@
 package com.zinalabs.subscriptionreminder.presenters;
 
+import android.content.Context;
 import android.support.annotation.Nullable;
 import android.view.MenuItem;
 
@@ -24,5 +25,8 @@ public class CustomerProfilePresenter {
 
     public void changeActivity(Class activity, @Nullable Customer customer){
         view.changeActivty(activity, customer);
+    }
+    public void callButtonClicked(Context context, int number){
+        view.callButtonClicked(context, number);
     }
 }

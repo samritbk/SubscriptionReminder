@@ -82,6 +82,11 @@
                                     android:textSize="20sp"
                                     android:textColor="#333"
                                     android:paddingBottom="12dp"/>
+                                <Button
+                                    android:id="@+id/callButton"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Call Customer"/>
                         </LinearLayout>
                 </android.support.v7.widget.CardView>
 

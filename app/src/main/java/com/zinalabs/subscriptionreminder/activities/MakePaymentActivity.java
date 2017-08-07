@@ -106,6 +106,7 @@ public class MakePaymentActivity extends AppCompatActivity implements MakePaymen
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month=month+1;
+
                 int monthTo=month+1;
                 presenter.setEditText(EDview, year+"-"+month+"-"+day);
                 presenter.setEditText(EDtoView, year+"-"+monthTo+"-"+day);
